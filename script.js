@@ -15,7 +15,7 @@ let moveSymbolsArray = []
 let qwertyKeyboard;
 let keyboardTraining;
 let keyboardFillColors = {};
-
+let keyLocked = false;
 
 let data =
 {
@@ -52,25 +52,34 @@ function load() {
     timerStart();
     document.addEventListener('keyup', function (event) {
         const pressedSymbol = event.key.toUpperCase();
-        console.log(KeyToSVG_ID(data.lastKeyPressed))
-        if (pressedSymbol in keyboardFillColors)
-            qwertyKeyboard.contentDocument.querySelector("#" + KeyToSVG_ID(pressedSymbol)).style.fill = keyboardFillColors[pressedSymbol];
+        console.log(KeySVG[data.lastKeyPressed])
+        // if (pressedSymbol in keyboardFillColors)
+        //     qwertyKeyboard.contentDocument.querySelector("#" + KeySVG[data.lastKeyPressed]).style.fill = keyboardFillColors[pressedSymbol];
 
     });
     // Обработчик события нажатия клавиши
     document.addEventListener('keydown', function (event) {
+        if (keyLocked) return;
         data.symbolsPressed++;
-        const pressedSymbol = event.key.toUpperCase();
+        const pressedSymbol = event.code.toUpperCase();
         data.lastKeyPressed = pressedSymbol
-        console.log('Код нажатой клавиши:', event.key);
+        console.log('Код нажатой клавиши:', event.code);
         let wrong = true;
         //if (KeyToSVG_ID(data.lastKeyPressed))
-        console.log(KeyToSVG_ID(data.lastKeyPressed))
+        console.log(KeySVG[data.lastKeyPressed])
         //console.log(document.getElementById(KeyToSVG_ID(data.lastKeyPressed)))//.style.color = 'red';        
-        const qwertyKey = qwertyKeyboard.contentDocument.querySelector('#' + KeyToSVG_ID(data.lastKeyPressed));
+        const qwertyKey = qwertyKeyboard.contentDocument.querySelector('#' + KeySVG[data.lastKeyPressed]);
 
         keyboardFillColors[pressedSymbol] = qwertyKey.style.fill
         qwertyKey.style.fill = COLOR_PRESSED_KEY;
+        setTimeout(() => {
+            keyLocked = true;
+            if (pressedSymbol in keyboardFillColors) {
+                qwertyKeyboard.contentDocument.querySelector("#" + KeySVG[data.lastKeyPressed]).style.fill = keyboardFillColors[pressedSymbol];
+                keyLocked = false;
+            }
+
+        }, 100);
 
         for (let i = symbols.length - 1; i >= 0; i--) {
             if (symbols[i].divSymbol.textContent.toUpperCase() === pressedSymbol) {
@@ -82,8 +91,8 @@ function load() {
                 //container.removeChild(symbols[i]);
                 //console.log(symbols[i])
                 symbols.splice(i, 1);
-                event.stopPropagation();
                 event.preventDefault();
+                event.stopPropagation();
                 wrong = false;
                 break;
             };
@@ -186,46 +195,137 @@ function checkTimeStart() {
     data.formatedTimeStart = data.timeStart.toLocaleString('ru-RU', options).replace(',', '');
 }
 
-function KeyToSVG_ID(key) {
-    switch (key) {
-        case 'F1':
-            return 'path107';
-        case 'F2':
-            return 'path109';
-        case 'F3':
-            return 'path111';
-        case 'F4':
-            return 'path113';
-        case 'F5':
-            return 'path115';
-        case 'F6':
-            return 'path117';
-        case 'F7':
-            return 'path119';
-        case 'F8':
-            return 'path121';
-        case 'F9':
-            return 'path123';
-        case 'F10':
-            return 'path125';
-        case 'F11':
-            return 'path127';
-        case 'F12':
-            return 'path129';
-        case 'INSERT':
-            return 'path131';
-        case 'HOME':
-            return 'path133';
-        case 'DELETE':
-            return 'path135';
-        case 'DELETE':
-            return 'path137';
-        case 'PAGEUP':
-            return 'path139';
-        case 'PAGEDOWN':
-            return 'path141';
-        default:
-            return 'path133';
+const KeySVG = {
+    'F1': 'path107',
+    'F2': 'path109',
+    'F3': 'path111',
+    'F4': 'path113',
+    'F5': 'path115',
+    'F6': 'path117',
+    'F7': 'path119',
+    'F8': 'path121',
+    'F9': 'path123',
+    'F10': 'path125',
+    'F11': 'path127',
+    'F12': 'path129',
+    'ESC': 'path105',
+    'TAB': 'path197',
 
-    }
-}
+    '~': 'path11',
+    'BACKQUOTE': 'path11',
+    '!': 'path13',
+    'DIGIT1': 'path13',
+    '@': 'path15',
+    'DIGIT2': 'path15',
+    '#': 'path17',
+    'DIGIT3': 'path17',
+    '$': 'path19',
+    'DIGIT4': 'path19',
+    '%': 'path21',
+    'DIGIT5': 'path21',
+    '^': 'path23',
+    'DIGIT6': 'path23',
+    '&': 'path25',
+    'DIGIT7': 'path25',
+    '*': 'path27',
+    'DIGIT8': 'path27',
+    '(': 'path29',
+    'DIGIT9': 'path29',
+    ')': 'path31',
+    'DIGIT0': 'path31',
+    '_': 'path33',
+    'MINUS': 'path33',
+    '+': 'path35',
+    'EQUAL': 'path35',
+    '{': 'path109',
+    '}': 'path109',
+    ';': 'path109',
+    "'": 'path109',
+    ':': 'path109',
+    '"': 'path109',
+    '|': 'path109',
+    '\\': 'path109',
+    '<': 'path109',
+    '>': 'path109',
+    '?': 'path109',
+    '/': 'path109',
+    '*': 'path109',
+    '-': 'path109',
+    '+': 'path109',
+    '.': 'path109',
+    'INSERT': 'path131',
+    'HOME': 'path133',
+    'DELETE': 'path143',
+    'END': 'path145',
+    'PAGEUP': 'path135',
+    'PAGEDOWN': 'path147',
+    'CONTROLLEFT': 'path563',
+    'CONTROLRIGHT': 'path559',
+    'ALTLEFT': 'path567',
+    'ALTRIGHT': 'path865',
+    'SHIFTLEFT': 'path561',
+    'SHIFTRIGHT': 'path551',
+    'BACKSPACE': 'path39',
+    'ENTER': 'path553',
+    'NUMPADENTER': 'path193',
+    'ESCAPE': 'path105',
+    'CAPSLOCK': 'path199',
+    'ARROWLEFT': 'path149',
+    'ARROWRIGHT': 'path153',
+    'ARROWUP': 'path155',
+    'ARROWDOWN': 'path151',
+    'SPACE': 'path185',
+    'BRACKETLEFT': 'path61',
+    'BRACKETRIGHT': 'path63',
+    'KEYQ': 'path41',
+    'KEYW': 'path43',
+    'KEYE': 'path45',
+    'KEYR': 'path47',
+    'KEYT': 'path49',
+    'KEYY': 'path51',
+    'KEYU': 'path53',
+    'KEYI': 'path55',
+    'KEYO': 'path57',
+    'KEYP': 'path59',
+    'KEYA': 'path65',
+    'KEYS': 'path67',
+    'KEYD': 'path69',
+    'KEYF': 'path71',
+    'KEYG': 'path73',
+    'KEYH': 'path75',
+    'KEYJ': 'path77',
+    'KEYK': 'path79',
+    'KEYL': 'path81',
+    'KEYZ': 'path87',
+    'KEYX': 'path89',
+    'KEYC': 'path91',
+    'KEYV': 'path195',
+    'KEYB': 'path93',
+    'KEYN': 'path95',
+    'KEYM': 'path97',
+    'COMMA': 'path99',
+    'PERIOD': 'path101',
+    'SLASH': 'path103',
+    'INTLBACKSLASH': 'path37',
+    'NUMLOCK': 'path157',
+    'NUMPADDIVIDE': 'path159',
+    'NUMPADMULTIPLY': 'path161',
+    'NUMPADSUBTRACT': 'path183',
+    'NUMPAD7': 'path163',
+    'NUMPAD8': 'path165',
+    'NUMPAD9': 'path167',
+    'NUMPADADD': 'path191',
+    'NUMPAD4': 'path169',
+    'NUMPAD5': 'path171',
+    'NUMPAD6': 'path173',
+    'NUMPAD1': 'path175',
+    'NUMPAD2': 'path177',
+    'NUMPAD3': 'path179',
+    'NUMPAD0': 'path373',
+    'NUMPADDECIMAL': 'path181',
+    'NUMPADENTER': 'path193',
+    'SEMICOLON': 'path83',
+    'QUOTE': 'path85',
+    'BACKSLASH': 'path37'
+
+} 
