@@ -7,28 +7,61 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script src="script.js"></script>
 </head>
 
 <body onload="load()">
-    <div class="containter" id="container" style="height: 800px;">
-        <div class="row">
-            <div class="col">
+    <div id="app">
+        <div class="containter">
+            <div class="row lh-1 text-center align-middle" style="color:black">
+                <table class="table text-center caption-top thead-light table-striped">
+                    <tbody>
+                        <thead>
+                            <tr>
+                                <td class="infoLabel">Начало:</td>
+                                <td class="infoLabel">Продолжительность:</td>
+                                <td class="infoLabel">Попыток:</td>
+                                <td class="infoLabel">Ошибок:</td>
+                                <td class="infoLabel">На экране:</td>
+                                <td class="infoLabel">Качество:</td>
+                            </tr>
+                        </thead>
+                        <tr class="info">
+                            <td><span id="timeStart">{{timeStart}}</span></td>
+                            <td><span id="timeDuration">{{timeDuration}}</span></td>
+                            <td><span id="score">{{score}}</span></span></td>
+                            <td><span id="wrongPressed">{{wrongPressed}}</span></td>
+                            <td><span id="symbolsOn">{{symbolsOnScreen}}</span></td>
+                            <td><span id="symbolsPressed">{{symbolsPressed}}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <h1>Клавиатурный тренажер</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" id="keysContainer" style="height: 500px;">
+
+                </div>
+            </div>
+
+            <div class="row" style="position: absolute;bottom: 100px;">
+                <div class="col center">
+                    <img src="images/Qwerty.svg">
+                </div>
 
             </div>
         </div>
-        <div class="row">
-            <div class="col text-center">
-                <h1>Клавиатурный тренажер</h1>
-            </div>
-        </div>
-        <div class="row" style="position: absolute;bottom: 100px;">
-            <div class="col center">
-                <img src="images/Qwerty.svg">
-            </div>
-
-        </div>
-    </div>
+    </div><!--app-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
