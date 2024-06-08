@@ -13,7 +13,7 @@
 
 <body onload="load()">
     <div id="app">
-        <div class="containter">
+        <div class="container">
             <div class="row lh-1 text-center align-middle" style="color:black">
                 <table class="table text-center caption-top thead-light table-striped">
                     <tbody>
@@ -21,19 +21,19 @@
                             <tr>
                                 <td class="infoLabel">Начало:</td>
                                 <td class="infoLabel">Продолжительность:</td>
-                                <td class="infoLabel">Попыток:</td>
-                                <td class="infoLabel">Ошибок:</td>
-                                <td class="infoLabel">На экране:</td>
+                                <td class="infoLabel">Нажатий:</td>
                                 <td class="infoLabel">Качество:</td>
+                                <td class="infoLabel">Оценка:</td>
+                                <td class="infoLabel">Нажатая<br>клавиша:</td>
                             </tr>
                         </thead>
                         <tr class="info">
-                            <td><span id="timeStart">{{timeStart}}</span></td>
+                            <td><span id="timeStart">{{formatedTimeStart}}</span></td>
                             <td><span id="timeDuration">{{timeDuration}}</span></td>
-                            <td><span id="score">{{score}}</span></span></td>
-                            <td><span id="wrongPressed">{{wrongPressed}}</span></td>
-                            <td><span id="symbolsOn">{{symbolsOnScreen}}</span></td>
-                            <td><span id="symbolsPressed">{{symbolsPressed}}</span></td>
+                            <td><span id="score">{{symbolsPressed}}</span></span></td>
+                            <td><span id="wrongPressed">{{percent}}</span></td>
+                            <td><span id="symbolsOn">{{grade}}</span></td>
+                            <td><span id="symbolsPressed">{{lastKeyPressed}}</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -44,19 +44,28 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-1">
+                    <img src="images/logo02.png" class="logo">
+                </div>
                 <div class="col text-center">
                     <h1>Клавиатурный тренажер</h1>
                 </div>
+
             </div>
             <div class="row">
-                <div class="col" id="keysContainer" style="height: 500px;">
+                <div class="col" id="keysContainer">
 
                 </div>
             </div>
 
-            <div class="row" style="position: absolute;bottom: 100px;">
-                <div class="col center">
-                    <img src="images/Qwerty.svg">
+            <div class="row">
+                <div class="col text-center">
+                    <!--<img src="images/Qwerty.svg">-->
+
+                    <object type="image/svg+xml" data="images/Qwerty.svg" width="800" id="QwertyKeyboard">
+                        Your browser does not support SVG
+                    </object>
+
                 </div>
 
             </div>

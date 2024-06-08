@@ -1,0 +1,14 @@
+#keysContainer {
+    height: 600px;
+    border: 1px solid black;
+    margin: 0px;
+    padding: 0px;
+}
+
+.keyStyle {
+    font-size: 30px;
+    border: 2px solid black;
+    width: auto;
+    height: 50px;
+    text-align: center;
+}
