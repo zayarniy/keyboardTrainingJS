@@ -1,11 +1,12 @@
 const GAME_STATUS = { MENU: 0, PAUSE: 1, PLAY: 2, GAMEOVER: 3 }
 
 
-const GAME_SYMBOLS = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'TAB',
-    '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', ';', `'`, ':', '"', '|', '\\', '',
+const GAME_SYMBOLS = ['F2', 'F3', 'F4', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'TAB',
+    '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', ';', `'`, ':', '"', '|', '\\',
     '<', '>', '?', '/', '*', '-', '+', '.', 'Insert', 'Home', 'Delete', 'End', 'PageUp', 'PageDown', 'Control', 'Alt', 'Shift', 'Backspace'
 ];
 const COLOR_PRESSED_KEY = '#777777'
+
 
 
 // Получаем контейнер для символа
@@ -50,39 +51,34 @@ function load() {
     qwertyKeyboard = document.getElementById('QwertyKeyboard'); setInterval(MoveSymbol, 2000);
     checkTimeStart();
     timerStart();
-    document.addEventListener('keyup', function (event) {
-        const pressedSymbol = event.key.toUpperCase();
-        console.log(KeySVG[data.lastKeyPressed])
-        // if (pressedSymbol in keyboardFillColors)
-        //     qwertyKeyboard.contentDocument.querySelector("#" + KeySVG[data.lastKeyPressed]).style.fill = keyboardFillColors[pressedSymbol];
-
-    });
     // Обработчик события нажатия клавиши
     document.addEventListener('keydown', function (event) {
         if (keyLocked) return;
         data.symbolsPressed++;
-        const pressedSymbol = event.code.toUpperCase();
-        data.lastKeyPressed = pressedSymbol
-        console.log('Код нажатой клавиши:', event.code);
+        const _event = event;
+        const pressedKeyCode = _event.code.toUpperCase();
+        const pressedKey = _event.key.toUpperCase();
+        data.lastKeyPressed = pressedKey
+        //console.log('Код нажатой клавиши:', event.code);
         let wrong = true;
         //if (KeyToSVG_ID(data.lastKeyPressed))
-        console.log(KeySVG[data.lastKeyPressed])
+        //console.log(KeyCodeSVG[data.lastKeyPressed])
         //console.log(document.getElementById(KeyToSVG_ID(data.lastKeyPressed)))//.style.color = 'red';        
-        const qwertyKey = qwertyKeyboard.contentDocument.querySelector('#' + KeySVG[data.lastKeyPressed]);
+        const qwertyKey = qwertyKeyboard.contentDocument.querySelector('#' + KeyCodeSVG[pressedKeyCode]);
 
-        keyboardFillColors[pressedSymbol] = qwertyKey.style.fill
+        //keyboardFillColors[pressedSymbolCode] = qwertyKey.style.fill
         qwertyKey.style.fill = COLOR_PRESSED_KEY;
         setTimeout(() => {
-            keyLocked = true;
-            if (pressedSymbol in keyboardFillColors) {
-                qwertyKeyboard.contentDocument.querySelector("#" + KeySVG[data.lastKeyPressed]).style.fill = keyboardFillColors[pressedSymbol];
-                keyLocked = false;
+            //keyLocked = true;
+            if (pressedKeyCode in KeysColors) {
+                qwertyKeyboard.contentDocument.querySelector("#" + KeyCodeSVG[pressedKeyCode]).style.fill = '#' + KeysColors[pressedKeyCode]
+                //  keyLocked = false;
             }
 
         }, 100);
 
         for (let i = symbols.length - 1; i >= 0; i--) {
-            if (symbols[i].divSymbol.textContent.toUpperCase() === pressedSymbol) {
+            if (symbols[i].divSymbol.textContent.toUpperCase() === pressedKey) {
                 data.score++;
                 if (container.contains(symbols[i].divSymbol))
                     container.removeChild(symbols[i].divSymbol);
@@ -93,7 +89,6 @@ function load() {
                 symbols.splice(i, 1);
                 event.preventDefault();
                 event.stopPropagation();
-                wrong = false;
                 break;
             };
 
@@ -195,7 +190,7 @@ function checkTimeStart() {
     data.formatedTimeStart = data.timeStart.toLocaleString('ru-RU', options).replace(',', '');
 }
 
-const KeySVG = {
+const KeyCodeSVG = {
     'F1': 'path107',
     'F2': 'path109',
     'F3': 'path111',
@@ -210,7 +205,6 @@ const KeySVG = {
     'F12': 'path129',
     'ESC': 'path105',
     'TAB': 'path197',
-
     '~': 'path11',
     'BACKQUOTE': 'path11',
     '!': 'path13',
@@ -327,5 +321,138 @@ const KeySVG = {
     'SEMICOLON': 'path83',
     'QUOTE': 'path85',
     'BACKSLASH': 'path37'
+}
 
-} 
+const KeysColors = {
+    'F1': 'E8C37E',
+    'F2': 'E8C37E',
+    'F3': 'E8C37E',
+    'F4': 'E8C37E',
+    'F5': 'E8C37E',
+    'F6': 'E8C37E',
+    'F7': 'E8C37E',
+    'F8': 'E8C37E',
+    'F9': 'E8C37E',
+    'F10': 'E8C37E',
+    'F11': 'E8C37E',
+    'F12': 'E8C37E',
+    'ESC': 'E8C37E',
+    'TAB': '9CC4D5',
+    '~': '9CC4D5',
+    'BACKQUOTE': '9CC4D5',
+    '!': '9CC4D5',
+    'DIGIT1': '9CC4D5',
+    '@': '9CC4D5',
+    'DIGIT2': '9CC4D5',
+    '#': '9CC4D5',
+    'DIGIT3': '9CC4D5',
+    '$': '9CC4D5',
+    'DIGIT4': '9CC4D5',
+    '%': '9CC4D5',
+    'DIGIT5': '9CC4D5',
+    '^': '9CC4D5',
+    'DIGIT6': '9CC4D5',
+    '&': '9CC4D5',
+    'DIGIT7': '9CC4D5',
+    '*': '9CC4D5',
+    'DIGIT8': '9CC4D5',
+    '(': '9CC4D5',
+    'DIGIT9': '9CC4D5',
+    ')': '9CC4D5',
+    'DIGIT0': '9CC4D5',
+    '_': '9CC4D5',
+    'MINUS': '9CC4D5',
+    '+': '9CC4D5',
+    'EQUAL': '9CC4D5',
+    '{': '9CC4D5',
+    '}': '9CC4D5',
+    ';': '9CC4D5',
+    "'": '9CC4D5',
+    ':': '9CC4D5',
+    '"': '9CC4D5',
+    '|': '9CC4D5',
+    '\\': '9CC4D5',
+    '<': '9CC4D5',
+    '>': '9CC4D5',
+    '?': '9CC4D5',
+    '/': '9CC4D5',
+    '*': '9CC4D5',
+    '-': '9CC4D5',
+    '+': '9CC4D5',
+    '.': '9CC4D5',
+    'INSERT': 'FFFFFF',
+    'HOME': 'FFFFFF',
+    'DELETE': 'FFFFFF',
+    'END': 'FFFFFF',
+    'PAGEUP': 'FFFFFF',
+    'PAGEDOWN': 'FFFFFF',
+    'CONTROLLEFT': '9CC4D5',
+    'CONTROLRIGHT': '9CC4D5',
+    'ALTLEFT': '9CC4D5',
+    'ALTRIGHT': '9CC4D5',
+    'SHIFTLEFT': '9CC4D5',
+    'SHIFTRIGHT': '9CC4D5',
+    'BACKSPACE': '9CC4D5',
+    'ENTER': 'EFF1BE',
+    'NUMPADENTER': 'EFF1BE',
+    'ESCAPE': 'FFFFFF',
+    'CAPSLOCK': 'path199',
+    'ARROWLEFT': 'AAD2B1',
+    'ARROWRIGHT': 'AAD2B1',
+    'ARROWUP': 'AAD2B1',
+    'ARROWDOWN': 'AAD2B1',
+    'SPACE': '9CC4D5',
+    'BRACKETLEFT': '9CC4D5',
+    'BRACKETRIGHT': '9CC4D5',
+    'KEYQ': '9CC4D5',
+    'KEYW': '9CC4D5',
+    'KEYE': '9CC4D5',
+    'KEYR': '9CC4D5',
+    'KEYT': '9CC4D5',
+    'KEYY': '9CC4D5',
+    'KEYU': '9CC4D5',
+    'KEYI': '9CC4D5',
+    'KEYO': '9CC4D5',
+    'KEYP': '9CC4D5',
+    'KEYA': '9CC4D5',
+    'KEYS': '9CC4D5',
+    'KEYD': '9CC4D5',
+    'KEYF': '9CC4D5',
+    'KEYG': '9CC4D5',
+    'KEYH': '9CC4D5',
+    'KEYJ': '9CC4D5',
+    'KEYK': '9CC4D5',
+    'KEYL': '9CC4D5',
+    'KEYZ': '9CC4D5',
+    'KEYX': '9CC4D5',
+    'KEYC': '9CC4D5',
+    'KEYV': '9CC4D55',
+    'KEYB': '9CC4D5',
+    'KEYN': '9CC4D5',
+    'KEYM': '9CC4D5',
+    'COMMA': '9CC4D5',
+    'PERIOD': '9CC4D5',
+    'SLASH': '9CC4D5',
+    'INTLBACKSLASH': '9CC4D5',
+    'NUMLOCK': 'A1A8CA',
+    'NUMPADDIVIDE': 'A1A8CA',
+    'NUMPADMULTIPLY': 'A1A8CA',
+    'NUMPADSUBTRACT': 'A1A8CA',
+    'NUMPAD7': 'A1A8CA',
+    'NUMPAD8': 'A1A8CA',
+    'NUMPAD9': 'A1A8CA',
+    'NUMPADADD': 'A1A8CA',
+    'NUMPAD4': 'A1A8CA',
+    'NUMPAD5': 'A1A8CA',
+    'NUMPAD6': 'A1A8CA',
+    'NUMPAD1': 'A1A8CA',
+    'NUMPAD2': 'A1A8CA',
+    'NUMPAD3': 'A1A8CA',
+    'NUMPAD0': 'A1A8CA',
+    'NUMPADDECIMAL': 'A1A8CA',
+    'NUMPADENTER': 'A1A8CA',
+    'SEMICOLON': '9CC4D5',
+    'QUOTE': '9CC4D5',
+    'BACKSLASH': '9CC4D5'
+}
+
