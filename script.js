@@ -26,10 +26,16 @@ let data =
     score: 0,
     wrongPressed: 0,
     percent: 0,
-    grade: 0,
+    //grade: 0,
     symbolsOnScreen: 0,
     symbolsPressed: 0,
-    lastKeyPressed: ''
+    lastKeyPressed: '',
+    setWrongPressScore: -500,
+    setDontPressScore: -1000,
+    set5GradeScore: 20000,
+    set4GradeScore: 16000,
+    set3GradeScore: 10000,
+    set2GradeScore: 6000
 }
 
 
@@ -37,29 +43,41 @@ function load() {
     keyboardTraining = new Vue(
         {
             el: '#app',
-            data
+            data,
+            computed:
+            {
+                grade() {
+                    //return ((this.symbolsPressed - this.wrongPressed) / this.symbolsPressed * 2) + (this.score / 200)
+                    if (this.score >= 12000) return 5;
+                    if (this.score < 12000 && this.score >= 10000) return 4;
+                    if (this.score < 10000 && this.score >= 8000) return 3;
+                    if (this.score < 8000 && this.score >= 6000) return 2;
+                    if (this.score < 6000) return 1;
+
+                }
+            }
         }
     );
     container = document.getElementById('keysContainer');
-    // Запускаем движение символов каждые 2 секунды
-    /*
-    setInterval(() => {
-        let ms = new MoveSymbol();
-        symbols.push(ms)
-    }, 5000);
-    */
+
     qwertyKeyboard = document.getElementById('QwertyKeyboard'); setInterval(MoveSymbol, 2000);
     checkTimeStart();
     timerStart();
+
+    document.addEventListener("keydown", function () {
+        event.preventDefault();
+    })
     // Обработчик события нажатия клавиши
-    document.addEventListener('keydown', function (event) {
-        if (keyLocked) return;
-        data.symbolsPressed++;
+    document.addEventListener('keyup', function (event) {
+
+        //event.stopPropagation();
+
         const _event = event;
         const pressedKeyCode = _event.code.toUpperCase();
         const pressedKey = _event.key.toUpperCase();
         data.lastKeyPressed = pressedKey
-        //console.log('Код нажатой клавиши:', event.code);
+        console.log('Код нажатой клавиши:', event.code);
+        if (pressedKey != 'SHIFT') data.symbolsPressed++;
         let wrong = true;
         //if (KeyToSVG_ID(data.lastKeyPressed))
         //console.log(KeyCodeSVG[data.lastKeyPressed])
@@ -77,9 +95,10 @@ function load() {
 
         }, 100);
 
-        for (let i = symbols.length - 1; i >= 0; i--) {
+        for (let i = 0; i < symbols.length; i++) {
             if (symbols[i].divSymbol.textContent.toUpperCase() === pressedKey) {
-                data.score++;
+                console.log('top:' + (1000 - symbols[i].divSymbol.offsetTop))
+                data.score += (-data.setDontPressScore - symbols[i].divSymbol.offsetTop);
                 if (container.contains(symbols[i].divSymbol))
                     container.removeChild(symbols[i].divSymbol);
                 clearInterval(symbols[i].interval);
@@ -87,15 +106,16 @@ function load() {
                 //container.removeChild(symbols[i]);
                 //console.log(symbols[i])
                 symbols.splice(i, 1);
-                event.preventDefault();
-                event.stopPropagation();
                 break;
             };
 
 
 
         }
-        if (wrong) data.wrongPressed++;
+        if (wrong && pressedKey != 'SHIFT') {
+            data.wrongPressed++;
+            data.score += data.setWrongPressScore;
+        }
     });
 }
 
@@ -107,9 +127,21 @@ function MoveSymbol() {
     //this.divSymbol = 
     let symbol = document.createElement('div');//this.divSymbol;
     symbol.classList.add('keyStyle');
+
+
     let top = document.getElementById('keysContainer').offsetTop;
     let left = document.getElementById('keysContainer').offsetLeft;
-    symbol.textContent = GAME_SYMBOLS[Math.floor(Math.random() * GAME_SYMBOLS.length)]; // Выбираем случайный символ из массива
+    let randomKey = GAME_SYMBOLS[Math.floor(Math.random() * GAME_SYMBOLS.length)];
+    symbol.textContent = randomKey; // Выбираем случайный символ из массива
+    symbol.style.backgroundColor = "#" + GAME_SYMBOLS_COLOR[randomKey];
+    //let scoreDiv = document.createElement('span');
+    //scoreDiv.classList.add('scoreStyle');
+    //scoreDiv.textContent = '10';
+    //symbol.appendChild(scoreDiv);
+
+    if (symbol.textContent.length > 3) {
+        symbol.style.fontSize = `${11}px`
+    }
     symbol.style.position = 'absolute';
     symbol.style.top = `${top}px`; // Начальная позиция сверху
     symbol.style.left = `${Math.floor(Math.random() * (container.offsetWidth - 100)) + left}px`; // Случайное положение по горизонтали
@@ -117,17 +149,18 @@ function MoveSymbol() {
     //symbols.push(symbol);
 
     // Определяем скорость движения символа
-    const speed = 1; // Скорость в пикселях за кадр
+    const speed = Math.floor(Math.random() * 4) + 1; // Скорость в пикселях за кадр
 
     const interval = setInterval(() => {
         let top2 = parseInt(symbol.style.top);
         // Проверяем, достиг ли символ дна экрана
         if (top2 + symbol.offsetHeight >= container.offsetTop + container.offsetHeight) {
             // Удаляем символ и создаем новый
-            console.log('Удаление символа при достижении края:' + symbol)
+            //console.log('Удаление символа при достижении края:' + symbol)
             clearInterval(interval);
             //document.body.removeChild(movingObject);
             container.removeChild(symbol);
+            data.score += data.setDontPressScore;
             data.symbolsOnScreen--;
             // data.symbolsOnScreen--;
 
@@ -189,6 +222,24 @@ function checkTimeStart() {
     //document.getElementById("timeStart").innerHTML = formattedTime;
     data.formatedTimeStart = data.timeStart.toLocaleString('ru-RU', options).replace(',', '');
 }
+
+let isHintVisible = false;
+
+function toggleHint() {
+    const hintContent = document.querySelector('.hint-content');
+    const hintToggle = document.querySelector('.hint-toggle');
+
+    if (isHintVisible) {
+        hintContent.style.display = 'none';
+        hintToggle.textContent = 'Подсказка';
+        isHintVisible = false;
+    } else {
+        hintContent.style.display = 'block';
+        hintToggle.textContent = 'Спрятать';
+        isHintVisible = true;
+    }
+}
+
 
 const KeyCodeSVG = {
     'F1': 'path107',
@@ -455,4 +506,59 @@ const KeysColors = {
     'QUOTE': '9CC4D5',
     'BACKSLASH': '9CC4D5'
 }
+
+const GAME_SYMBOLS_COLOR = {
+    'F2': 'E8C37E',
+    'F3': 'E8C37E',
+    'F4': 'E8C37E',
+    'F6': 'E8C37E',
+    'F7': 'E8C37E',
+    'F8': 'E8C37E',
+    'F9': 'E8C37E',
+    'F10': 'E8C37E',
+    'F11': 'E8C37E',
+    'F12': 'E8C37E',
+    'TAB': '9CC4D5',
+    '~': '9CC4D5',
+    '!': '9CC4D5',
+    '@': '9CC4D5',
+    '#': '9CC4D5',
+    '$': '9CC4D5',
+    '%': '9CC4D5',
+    '^': '9CC4D5',
+    '&': '9CC4D5',
+    '*': '9CC4D5',
+    '(': '9CC4D5',
+    ')': '9CC4D5',
+    '_': '9CC4D5',
+    '+': '9CC4D5',
+    '{': '9CC4D5',
+    '}': '9CC4D5',
+    ';': '9CC4D5',
+    "'": '9CC4D5',
+    ':': '9CC4D5',
+    '"': '9CC4D5',
+    '|': '9CC4D5',
+    '\\': '9CC4D5',
+    '<': '9CC4D5',
+    '>': '9CC4D5',
+    '?': '9CC4D5',
+    '/': '9CC4D5',
+    '*': '9CC4D5',
+    '-': '9CC4D5',
+    '+': '9CC4D5',
+    '.': '9CC4D5',
+    'Insert': 'FFFFFF',
+    'Home': 'FFFFFF',
+    'Delete': 'FFFFFF',
+    'End': 'FFFFFF',
+    'PageUp': 'FFFFFF',
+    'PageDown': 'FFFFFF',
+    'Control': '9CC4D5',
+    'Alt': '9CC4D5',
+    'Shift': '9CC4D5',
+    'Backspace': '9CC4D5'
+}
+
+
 

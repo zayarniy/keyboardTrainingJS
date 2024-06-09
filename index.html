@@ -22,7 +22,7 @@
                                 <td class="infoLabel">Начало:</td>
                                 <td class="infoLabel">Продолжительность:</td>
                                 <td class="infoLabel">Нажатий:</td>
-                                <td class="infoLabel">Качество:</td>
+                                <td class="infoLabel">Счет:</td>
                                 <td class="infoLabel">Оценка:</td>
                                 <td class="infoLabel">Нажатая<br>клавиша:</td>
                             </tr>
@@ -31,7 +31,7 @@
                             <td><span id="timeStart">{{formatedTimeStart}}</span></td>
                             <td><span id="timeDuration">{{timeDuration}}</span></td>
                             <td><span id="score">{{symbolsPressed}}</span></span></td>
-                            <td><span id="wrongPressed">{{percent}}</span></td>
+                            <td><span id="wrongPressed">{{score}}</span></td>
                             <td><span id="symbolsOn">{{grade}}</span></td>
                             <td><span id="symbolsPressed">{{lastKeyPressed}}</span></td>
                         </tr>
@@ -59,7 +59,7 @@
             </div>
 
             <div class="row">
-                <div class="col text-center">
+                <div class="col text-center qwertyContainer">
                     <!--<img src="images/Qwerty.svg">-->
 
                     <object type="image/svg+xml" data="images/Qwerty.svg" width="800" id="QwertyKeyboard">
@@ -68,6 +68,22 @@
 
                 </div>
 
+            </div>
+        </div>
+        <div class="hint-container">
+            <div class="hint-toggle" onclick="toggleHint()">Подсказка</div>
+            <div class="hint-content">
+                <h6>Условия</h6>
+                Нажимайте падающие клавиши как можно быстрее.<br>
+                За правильно нажатую клавишу баллы от 50 до 750.<br>
+                За не правильно нажатую клавишу {{setWrongPressScore}}<br>
+                За не нажатую клавишу {{setDontPressScore}}
+                <h6>Оценка</h6>
+                счет <strong>&gt=</strong> {{set5GradeScore}} - 5<br>
+                от {{set4GradeScore}} до {{set5GradeScore-1}} - 4<br>
+                от {{set3GradeScore}} до {{set4GradeScore-1}} - 3<br>
+                от {{set2GradeScore}} до {{set3GradeScore-1}} - 2<br>
+                меньше {{set2GradeScore}} - 1<br>
             </div>
         </div>
     </div><!--app-->
