@@ -30,6 +30,7 @@ let data =
     symbolsOnScreen: 0,
     symbolsPressed: 0,
     lastKeyPressed: '',
+    timeLeft:180,
     setWrongPressScore: -500,
     setDontPressScore: -1000,
     set5GradeScore: 20000,
@@ -58,13 +59,15 @@ function load() {
             }
         }
     );
+
+    timerLineInit();
     container = document.getElementById('keysContainer');
 
     qwertyKeyboard = document.getElementById('QwertyKeyboard'); setInterval(MoveSymbol, 2000);
     checkTimeStart();
     timerStart();
 
-    document.addEventListener("keydown", function () {
+    document.addEventListener("keydown", function (event) {
         event.preventDefault();
     })
     // Обработчик события нажатия клавиши
@@ -97,7 +100,7 @@ function load() {
 
         for (let i = 0; i < symbols.length; i++) {
             if (symbols[i].divSymbol.textContent.toUpperCase() === pressedKey) {
-                console.log('top:' + (1000 - symbols[i].divSymbol.offsetTop))
+                //console.log('top:' + (1000 - symbols[i].divSymbol.offsetTop))
                 data.score += (-data.setDontPressScore - symbols[i].divSymbol.offsetTop);
                 if (container.contains(symbols[i].divSymbol))
                     container.removeChild(symbols[i].divSymbol);
@@ -240,6 +243,36 @@ function toggleHint() {
     }
 }
 
+function timerLineInit()
+{
+// Set the timer duration in seconds
+let timerDuration = 100; // 3 minutes
+data.timeLeft=timerDuration;
+const timerContainer=document.getElementById('timer-container')
+// Get the timer line element
+const timerLine = document.getElementById('timer-line');
+
+// Set the initial width of the timer line to 100%
+timerLine.style.width = '100%';
+
+// Start the timer
+const timer = setInterval(() => {
+  // Decrease the width of the timer line by 1/180 (1% per second)
+  timerLine.style.width = `${(timerLine.offsetWidth / timerContainer.offsetWidth) * 100 - 100 / timerDuration}%`;
+
+  // Decrement the timer duration
+  //timerDuration--;
+  data.timeLeft--;
+
+  // Check if the timer has reached 0
+  if (data.timeLeft === 0) {
+    // Stop the timer
+    clearInterval(timer);
+    console.log('Timer finished!');
+  }
+}, 1000); // Run the timer every 1 second (1000 milliseconds)
+
+}
 
 const KeyCodeSVG = {
     'F1': 'path107',
